@@ -10,11 +10,23 @@ public class GuardianPointDisplayer : MonoBehaviour
     public float wallHeight;
 
     public Material floorMaterial;
-    public Material wallMaterial;
+    public Material[] wallMaterials;    // array of wall materials
+    public int selectedMaterialIndex;
+
+    private GameObject wall;            // reference to generated wall
 
     void Start()
     {
         DisplayGuardian();
+    }
+
+    void Update()
+    {
+        // Update wall material if necessary
+        if (wall != null && wall.GetComponent<MeshRenderer>().sharedMaterial != wallMaterials[selectedMaterialIndex])
+        {
+            wall.GetComponent<MeshRenderer>().material = wallMaterials[selectedMaterialIndex];
+        }
     }
 
     void DisplayGuardian()
@@ -65,12 +77,12 @@ public class GuardianPointDisplayer : MonoBehaviour
         mesh.RecalculateNormals();
 
         // Attach the created mesh to a new MeshFilter component
-        GameObject wall = new GameObject("Wall");
+        wall = new GameObject("Wall");
         MeshFilter meshFilter = wall.AddComponent<MeshFilter>();
         MeshRenderer meshRenderer = wall.AddComponent<MeshRenderer>();
 
         meshFilter.mesh = mesh;
-        meshRenderer.material = wallMaterial;
+        meshRenderer.material = wallMaterials[selectedMaterialIndex];
 
         wall.transform.parent = transform;
     }
@@ -110,5 +122,14 @@ public class GuardianPointDisplayer : MonoBehaviour
         meshRenderer.material = floorMaterial;
 
         floor.transform.parent = transform;
+    }
+
+    public void ChangeMaterial(int index)
+    {
+        // Ensure the provided index is within the correct range
+        if (index >= 0 && index < wallMaterials.Length)
+        {
+            selectedMaterialIndex = index;
+        }
     }
 }
