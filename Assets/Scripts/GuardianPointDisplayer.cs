@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GuardianPointDisplayer : MonoBehaviour
 {
@@ -14,9 +15,11 @@ public class GuardianPointDisplayer : MonoBehaviour
     public int selectedMaterialIndex;
 
     private GameObject wall;            // reference to generated wall
+    public Slider wallHeightSlider;
 
     void Start()
     {
+        wallHeightSlider.onValueChanged.AddListener(ChangeWallHeight);
         DisplayGuardian();
     }
 
@@ -131,5 +134,11 @@ public class GuardianPointDisplayer : MonoBehaviour
         {
             selectedMaterialIndex = index;
         }
+    }
+
+    public void ChangeWallHeight(float newHeight)
+    {
+        wallHeight = newHeight;
+        DisplayGuardian(); // Recreate the wall with the new height
     }
 }
